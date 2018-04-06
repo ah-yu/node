@@ -51,8 +51,8 @@ TEST(WasmRelocationX64ContextReference) {
 #ifdef OBJECT_PRINT
   OFStream os(stdout);
   code->Print(os);
-  byte* begin = code->instruction_start();
-  byte* end = begin + code->instruction_size();
+  byte* begin = code->raw_instruction_start();
+  byte* end = begin + code->raw_instruction_size();
   disasm::Disassembler::Disassemble(stdout, begin, end);
 #endif
   int offset = 1234;
@@ -64,8 +64,7 @@ TEST(WasmRelocationX64ContextReference) {
     CodeSpaceMemoryModificationScope modification_scope(isolate->heap());
     DCHECK(RelocInfo::IsWasmContextReference(it.rinfo()->rmode()));
     it.rinfo()->set_wasm_context_reference(
-        isolate, it.rinfo()->wasm_context_reference() + offset,
-        SKIP_ICACHE_FLUSH);
+        it.rinfo()->wasm_context_reference() + offset, SKIP_ICACHE_FLUSH);
   }
 
   // Check if immediate is updated correctly
@@ -74,8 +73,8 @@ TEST(WasmRelocationX64ContextReference) {
 
 #ifdef OBJECT_PRINT
   code->Print(os);
-  begin = code->instruction_start();
-  end = begin + code->instruction_size();
+  begin = code->raw_instruction_start();
+  end = begin + code->raw_instruction_size();
   disasm::Disassembler::Disassemble(stdout, begin, end);
 #endif
 }
